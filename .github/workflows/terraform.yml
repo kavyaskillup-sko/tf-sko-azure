@@ -2,7 +2,12 @@ name: Terraform CI/CD
 
 on:
   push:
-    branches: [ "main" ]
+    branches:
+      - main
+      - Azure-vm-module   # allow runs on your feature branch
+  pull_request:
+    branches:
+      - main              # run when PRs target main
   workflow_dispatch:
     inputs:
       environment:
@@ -26,7 +31,7 @@ jobs:
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
         with:
-          terraform_version: 1.2.0
+          terraform_version: 1.12.0
 
       - name: Select Workspace
         run: terraform workspace select ${{ github.event.inputs.environment }} || terraform workspace new ${{ github.event.inputs.environment }}
