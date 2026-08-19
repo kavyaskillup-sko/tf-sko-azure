@@ -38,7 +38,7 @@ jobs:
           terraform_version: 1.12.0   # ✅ matches versions.tf
 
       - name: Terraform Init
-        run: terraform init -backend-config=backend.tf -reconfigure
+        run: terraform init -reconfigure
 
       - name: Select Workspace
         run: |
