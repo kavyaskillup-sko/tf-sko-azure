@@ -4,16 +4,20 @@ on:
   push:
     branches:
       - main
-      - Azure-vm-module   # allow runs on your feature branch
+      - Azure-vm-module
   pull_request:
     branches:
-      - main              # run when PRs target main
+      - main
   workflow_dispatch:
     inputs:
       environment:
-        description: "Choose environment (dev or prod)"
+        description: "Choose environment"
         required: true
         default: "dev"
+        type: choice
+        options:
+          - dev
+          - prod
 
 jobs:
   terraform:
@@ -31,10 +35,12 @@ jobs:
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
         with:
-          terraform_version: 1.12.0
+          terraform_version: 1.2.0
 
       - name: Select Workspace
-        run: terraform workspace select ${{ github.event.inputs.environment }} || terraform workspace new ${{ github.event.inputs.environment }}
+        run: |
+          ENVIRONMENT=${{ github.event.inputs.environment || 'dev' }}
+          terraform workspace select $ENVIRONMENT || terraform workspace new $ENVIRONMENT
 
       - name: Terraform Init
         run: terraform init -backend-config=backend.tf
@@ -43,7 +49,7 @@ jobs:
         run: terraform validate
 
       - name: Terraform Plan
-        run: terraform plan -var-file=${{ github.event.inputs.environment }}/${{ github.event.inputs.environment }}.tfvars -out=tfplan
+        run: terraform plan -var-file=${{ github.event.inputs.environment || 'dev' }}/${{ github.event.inputs.environment || 'dev' }}.tfvars -out=tfplan
 
       - name: Terraform Apply
         run: terraform apply -auto-approve tfplan
