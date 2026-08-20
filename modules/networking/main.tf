@@ -2,7 +2,7 @@ resource "azurerm_virtual_network" "vnet" {
   name                = "vnet-${var.environment_tag}"
   location            = var.location
   resource_group_name = var.resource_group
-  address_space       = ["10.0.0.0/16"]
+  address_space       = ["10.0.00/16"]
 }
 
 resource "azurerm_subnet" "subnet" {
