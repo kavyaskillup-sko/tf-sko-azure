@@ -1,13 +1,6 @@
 name: Terraform CI/CD
 
 on:
-  push:
-    branches:
-      - main
-      - Azure-vm-module
-  pull_request:
-    branches:
-      - main
   workflow_dispatch:
     inputs:
       environment:
@@ -17,16 +10,17 @@ on:
         type: choice
         options:
           - dev
+          - uat
           - prod
 
 jobs:
   terraform:
     runs-on: ubuntu-latest
     env:
-      ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
-      ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
-      ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-      ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+      ARM_CLIENT_ID: ${{ secrets[format('AZURE_CLIENT_ID_%s', github.event.inputs.environment | upper)] }}
+      ARM_CLIENT_SECRET: ${{ secrets[format('AZURE_CLIENT_SECRET_%s', github.event.inputs.environment | upper)] }}
+      ARM_SUBSCRIPTION_ID: ${{ secrets[format('AZURE_SUBSCRIPTION_ID_%s', github.event.inputs.environment | upper)] }}
+      ARM_TENANT_ID: ${{ secrets[format('AZURE_TENANT_ID_%s', github.event.inputs.environment | upper)] }}
 
     steps:
       - name: Checkout code
@@ -38,20 +32,20 @@ jobs:
           terraform_version: 1.12.0
 
       - name: Terraform Init
-        run: terraform init -reconfigure
-
-      - name: Select Workspace
         run: |
-          ENVIRONMENT=${{ github.event.inputs.environment || 'dev' }}
-          terraform workspace select $ENVIRONMENT || terraform workspace new $ENVIRONMENT
+          ENV=${{ github.event.inputs.environment }}
+          terraform init \
+            -backend-config=environments/backend.tfvars \
+            -backend-config="key=vm-${ENV}.tfstate" \
+            -reconfigure
 
       - name: Terraform Validate
         run: terraform validate
 
       - name: Terraform Plan
         run: |
-          ENVIRONMENT=${{ github.event.inputs.environment || 'dev' }}
-          terraform plan -var-file=$ENVIRONMENT/$ENVIRONMENT.tfvars -out=tfplan
+          ENV=${{ github.event.inputs.environment }}
+          terraform plan -var-file=environments/${ENV}.tfvars -out=tfplan
 
       - name: Terraform Apply
         run: terraform apply -auto-approve tfplan
