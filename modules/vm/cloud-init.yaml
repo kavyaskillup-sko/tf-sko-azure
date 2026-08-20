@@ -1,0 +1,21 @@
+# #cloud-config
+# package_update: true
+# packages:
+#   - nginx
+#   - mysql-server
+#   - rabbitmq-server
+#   - memcached
+#   - mongodb
+#   - haproxy
+#   - elasticsearch
+
+# runcmd:
+#   - systemctl enable nginx && systemctl start nginx
+#   - systemctl enable mysql && systemctl start mysql
+#   - systemctl enable rabbitmq-server && systemctl start rabbitmq-server
+#   - systemctl enable memcached && systemctl start memcached
+#   - systemctl enable mongod && systemctl start mongod
+#   - systemctl enable haproxy && systemctl start haproxy
+#   - systemctl enable elasticsearch && systemctl start elasticsearch
+#   - git clone https://github.com/<your-org>/<sko-app-repo>.git /opt/sko-app
+#   - cd /opt/sko-app && ./install.sh
