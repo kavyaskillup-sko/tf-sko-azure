@@ -1,16 +1,23 @@
-resource "azurerm_linux_virtual_machine" "vm" {
-  name                = "${var.env}-vm"
-  resource_group_name = var.resource_group_name
+resource "azurerm_network_interface" "nic" {
+  name                = "nic-${var.environment_tag}"
   location            = var.location
-  size                = "Standard_B2s"
-  admin_username      = "azureuser"
+  resource_group_name = var.resource_group
 
-  network_interface_ids = [var.nic_id]
-
-  admin_ssh_key {
-    username   = "azureuser"
-    public_key = file(var.ssh_public_key)
+  ip_configuration {
+    name                          = "internal"
+    subnet_id                     = var.subnet_id
+    private_ip_address_allocation = "Dynamic"
   }
+}
+
+resource "azurerm_linux_virtual_machine" "vm" {
+  name                = "vm-${var.environment_tag}"
+  location            = var.location
+  resource_group_name = var.resource_group
+  size                = var.vm_size
+  admin_username      = var.admin_username
+
+  network_interface_ids = [azurerm_network_interface.nic.id]
 
   os_disk {
     caching              = "ReadWrite"
@@ -20,9 +27,12 @@ resource "azurerm_linux_virtual_machine" "vm" {
   source_image_reference {
     publisher = "Canonical"
     offer     = "UbuntuServer"
-    sku       = "20.04-LTS"
+    sku       = "18.04-LTS"
     version   = "latest"
   }
 
-  custom_data = file("${path.module}/cloud-init.yaml")
+  admin_ssh_key {
+    username   = var.admin_username
+    public_key = var.ssh_public_key
+  }
 }
