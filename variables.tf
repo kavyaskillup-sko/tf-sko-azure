@@ -31,3 +31,18 @@ variable "vm_size" {
   description = "VM size"
   type        = string
 }
+variable "location" {
+  description = "Azure region"
+  type        = string
+}
+
+variable "vm_size" {
+  description = "VM size"
+  type        = string
+}
+
+variable "availability_zone" {
+  description = "Availability zone within the region"
+  type        = string
+  default     = null
+}
