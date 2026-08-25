@@ -21,7 +21,7 @@ on:
         options:
           - westus2
           - eastus
-          - eastus2
+          - southindia
       vm_size:
         description: "VM size"
         required: true
@@ -31,6 +31,15 @@ on:
           - Standard_B2s
           - Standard_B2ms
           - Standard_D2s_v3
+      availability_zone:
+        description: "Availability Zone"
+        required: false
+        default: "1"
+        type: choice
+        options:
+          - "1"
+          - "2"
+          - "3"
 
 jobs:
   plan:
@@ -84,10 +93,12 @@ jobs:
           ENV=${{ github.event.inputs.environment }}
           REGION=${{ github.event.inputs.region }}
           SIZE=${{ github.event.inputs.vm_size }}
+          ZONE=${{ github.event.inputs.availability_zone }}
           terraform plan \
             -var-file=environments/${ENV}.tfvars \
             -var "location=${REGION}" \
             -var "vm_size=${SIZE}" \
+            -var "availability_zone=${ZONE}" \
             -out=tfplan
 
       - name: Upload Plan Artifact
