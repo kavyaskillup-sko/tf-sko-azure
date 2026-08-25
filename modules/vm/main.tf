@@ -16,8 +16,9 @@ resource "azurerm_linux_virtual_machine" "vm" {
   resource_group_name = var.resource_group
   size                = var.vm_size
   admin_username      = var.admin_username
-
   network_interface_ids = [azurerm_network_interface.nic.id]
+
+  zone = var.availability_zone   # 👈 New line
 
   os_disk {
     caching              = "ReadWrite"
