@@ -22,3 +22,12 @@ variable "ssh_public_key" {
   type        = string
   description = "SSH public key for VM login"
 }
+variable "location" {
+  description = "Azure region"
+  type        = string
+}
+
+variable "vm_size" {
+  description = "VM size"
+  type        = string
+}
