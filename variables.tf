@@ -8,9 +8,15 @@ variable "vm_size" {
   description = "Size of the VM"
 }
 
+variable "availability_zone" {
+  description = "Availability zone within the region"
+  type        = string
+  default     = null
+}
+
 variable "environment_tag" {
   type        = string
-  description = "Environment tag (dev/uat/prod)"
+  description = "Environment tag (dev/uat/prod/sit)"
 }
 
 variable "admin_username" {
@@ -22,27 +28,13 @@ variable "ssh_public_key" {
   type        = string
   description = "SSH public key for VM login"
 }
-variable "location" {
-  description = "Azure region"
+
+variable "resource_group" {
   type        = string
+  description = "Resource group name"
 }
 
-variable "vm_size" {
-  description = "VM size"
+variable "subnet_id" {
   type        = string
-}
-variable "location" {
-  description = "Azure region"
-  type        = string
-}
-
-variable "vm_size" {
-  description = "VM size"
-  type        = string
-}
-
-variable "availability_zone" {
-  description = "Availability zone within the region"
-  type        = string
-  default     = null
+  description = "Subnet ID for NIC"
 }
