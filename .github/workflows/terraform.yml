@@ -53,22 +53,23 @@ jobs:
 
       - name: Set environment secrets
         run: |
-          if [ "${{ github.event.inputs.environment }}" = "dev" ]; then
+          ENV=${{ github.event.inputs.environment }}
+          if [ "$ENV" = "dev" ]; then
             echo "ARM_CLIENT_ID=${{ secrets.AZURE_CLIENT_ID_DEV }}" >> $GITHUB_ENV
             echo "ARM_CLIENT_SECRET=${{ secrets.AZURE_CLIENT_SECRET_DEV }}" >> $GITHUB_ENV
             echo "ARM_SUBSCRIPTION_ID=${{ secrets.AZURE_SUBSCRIPTION_ID_DEV }}" >> $GITHUB_ENV
             echo "ARM_TENANT_ID=${{ secrets.AZURE_TENANT_ID_DEV }}" >> $GITHUB_ENV
-          elif [ "${{ github.event.inputs.environment }}" = "uat" ]; then
+          elif [ "$ENV" = "uat" ]; then
             echo "ARM_CLIENT_ID=${{ secrets.AZURE_CLIENT_ID_UAT }}" >> $GITHUB_ENV
             echo "ARM_CLIENT_SECRET=${{ secrets.AZURE_CLIENT_SECRET_UAT }}" >> $GITHUB_ENV
             echo "ARM_SUBSCRIPTION_ID=${{ secrets.AZURE_SUBSCRIPTION_ID_UAT }}" >> $GITHUB_ENV
             echo "ARM_TENANT_ID=${{ secrets.AZURE_TENANT_ID_UAT }}" >> $GITHUB_ENV
-          elif [ "${{ github.event.inputs.environment }}" = "prod" ]; then
+          elif [ "$ENV" = "prod" ]; then
             echo "ARM_CLIENT_ID=${{ secrets.AZURE_CLIENT_ID_PROD }}" >> $GITHUB_ENV
             echo "ARM_CLIENT_SECRET=${{ secrets.AZURE_CLIENT_SECRET_PROD }}" >> $GITHUB_ENV
             echo "ARM_SUBSCRIPTION_ID=${{ secrets.AZURE_SUBSCRIPTION_ID_PROD }}" >> $GITHUB_ENV
             echo "ARM_TENANT_ID=${{ secrets.AZURE_TENANT_ID_PROD }}" >> $GITHUB_ENV
-          elif [ "${{ github.event.inputs.environment }}" = "sit" ]; then
+          elif [ "$ENV" = "sit" ]; then
             echo "ARM_CLIENT_ID=${{ secrets.AZURE_CLIENT_ID_SIT }}" >> $GITHUB_ENV
             echo "ARM_CLIENT_SECRET=${{ secrets.AZURE_CLIENT_SECRET_SIT }}" >> $GITHUB_ENV
             echo "ARM_SUBSCRIPTION_ID=${{ secrets.AZURE_SUBSCRIPTION_ID_SIT }}" >> $GITHUB_ENV
