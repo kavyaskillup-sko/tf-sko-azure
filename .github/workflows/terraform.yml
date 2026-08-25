@@ -21,7 +21,7 @@ on:
         options:
           - westus2
           - eastus
-          - southindia
+          - eastus2
       vm_size:
         description: "VM size"
         required: true
