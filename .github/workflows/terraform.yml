@@ -12,7 +12,6 @@ on:
           - dev
           - uat
           - prod
-          - sit
       region:
         description: "Azure region"
         required: true
@@ -20,8 +19,7 @@ on:
         type: choice
         options:
           - westus2
-          - eastus
-          - eastus2
+          - westus3
       vm_size:
         description: "VM size"
         required: true
